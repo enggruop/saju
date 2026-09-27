@@ -150,5 +150,19 @@
     return split(Solar.fromYmd(year, 7, 1).getLunar().getYearInGanZhiExact());
   }
 
-  global.Saju = { computeSaju: computeSaju, yearPillar: yearPillar, tenGod: tenGod };
+  // 간지 하나를 일간 기준 십성과 함께 풀어서 돌려준다
+  function describe(gz, dayGan) {
+    var p = split(gz);
+    p.ganGod = tenGod(dayGan, p.gan);
+    p.zhiGod = tenGod(dayGan, GAN.indexOf(ZHI_MAIN_GAN.charAt(p.zhi)));
+    return p;
+  }
+
+  // 양력 y년 m월의 월운. 절입일이 월초(4~8일)라 15일 기준이면 그 달 대부분에 해당하는 월주가 나온다.
+  function monthPillar(y, m) {
+    return split(Solar.fromYmd(y, m, 15).getLunar().getMonthInGanZhiExact());
+  }
+
+  global.Saju = { computeSaju: computeSaju, yearPillar: yearPillar, monthPillar: monthPillar,
+                  describe: describe, tenGod: tenGod, GAN: GAN };
 })(window);

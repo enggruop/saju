@@ -32,7 +32,7 @@
 
   function fillSgg() {
     var sel = $("sgg");
-    sel.innerHTML = "<option value=''>시·군·구</option>";
+    sel.innerHTML = "<option value=''>선택</option>";
     var i = $("sido").value;
     if (i === "") { sel.disabled = true; return; }
     PLACES[+i][1].forEach(function (r, j) {
@@ -62,13 +62,28 @@
   });
 
   // ---------- 폼 ----------
-  function radio(name) { return document.querySelector("input[name=" + name + "]:checked").value; }
+  function radio(name) {
+    var el = document.querySelector("input[name=" + name + "]:checked");
+    return el ? el.value : null;
+  }
 
   document.querySelectorAll("input[name=cal]").forEach(function (r) {
     r.addEventListener("change", function () { $("leap-wrap").hidden = radio("cal") !== "lunar"; });
   });
 
-  $("t-unknown").addEventListener("change", function () { $("t").disabled = this.checked; });
+  $("t-unknown").addEventListener("change", function () {
+    $("th").disabled = $("tm").disabled = this.checked;
+  });
+
+  // 숫자 칸: 숫자만 받고, 자리가 차면 다음 칸으로
+  [["y", 4, "m"], ["m", 2, "d"], ["d", 2, "th"], ["th", 2, "tm"], ["tm", 2, null]].forEach(function (f) {
+    var el = $(f[0]);
+    el.addEventListener("input", function () {
+      var v = el.value.replace(/\D/g, "").slice(0, f[1]);
+      if (v !== el.value) el.value = v;
+      if (v.length === f[1] && f[2] && !$(f[2]).disabled) $(f[2]).focus();
+    });
+  });
 
   function readInput() {
     var y = parseInt($("y").value, 10), m = parseInt($("m").value, 10), d = parseInt($("d").value, 10);
@@ -81,13 +96,14 @@
       if (dt.getUTCMonth() !== m - 1) throw new Error("달력에 없는 날짜예요.");
     }
     var known = !$("t-unknown").checked;
-    var hm = ($("t").value || "").split(":");
-    if (known && hm.length < 2) throw new Error("태어난 시각을 적거나 '시각을 몰라요'를 켜 주세요.");
+    var h = parseInt($("th").value, 10), mi = $("tm").value === "" ? 0 : parseInt($("tm").value, 10);
+    if (known && !(h >= 0 && h <= 23)) throw new Error("태어난 시를 0부터 23 사이로 적거나 '시각 모름'을 켜 주세요.");
+    if (known && !(mi >= 0 && mi <= 59)) throw new Error("태어난 분을 0부터 59 사이로 적어 주세요.");
     place = currentPlace();
-    if (!place) throw new Error("태어난 곳의 시·도와 시·군·구를 고르거나 '태어난 곳을 몰라요'를 켜 주세요.");
+    if (!place) throw new Error("태어난 곳을 고르거나 '태어난 곳 모름'을 켜 주세요.");
     var input = {
       calendar: cal, leap: $("leap").checked, y: y, m: m, d: d,
-      timeKnown: known, h: known ? parseInt(hm[0], 10) : 12, mi: known ? parseInt(hm[1], 10) : 0,
+      timeKnown: known, h: known ? h : 12, mi: known ? mi : 0,
       gender: radio("gender"), longitude: place.lon, ziSect: 1
     };
     return input;

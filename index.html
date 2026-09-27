@@ -12,88 +12,96 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div class="backdrop" aria-hidden="true"></div>
 <main class="wrap">
 
 <header class="hero">
-  <h1>사주</h1>
+  <h1>사주 <span class="hanja">四柱</span></h1>
 </header>
 
-<section class="card" aria-labelledby="in-title">
-  <h2 id="in-title">출생 정보</h2>
-  <form id="form" novalidate>
+<form id="form" class="panel" novalidate aria-label="출생 정보">
 
-    <div class="group">
-      <label class="field">이름 <span class="opt">선택</span>
-        <input id="name" type="text" maxlength="20" autocomplete="off" placeholder="홍길동">
-      </label>
-      <fieldset class="field">
-        <legend>성별</legend>
-        <div class="seg" role="radiogroup">
-          <label><input type="radio" name="gender" value="M" checked><span>남</span></label>
-          <label><input type="radio" name="gender" value="F"><span>여</span></label>
-        </div>
-      </fieldset>
-    </div>
-
-    <div class="group">
-      <fieldset class="field">
-        <legend>생년월일</legend>
-        <div class="seg" role="radiogroup">
-          <label><input type="radio" name="cal" value="solar" checked><span>양력</span></label>
-          <label><input type="radio" name="cal" value="lunar"><span>음력</span></label>
-        </div>
-      </fieldset>
-      <label class="toggle" id="leap-wrap" hidden>
-        <input id="leap" type="checkbox"><span class="switch" aria-hidden="true"></span> 윤달
-      </label>
-    </div>
-
-    <div class="ymd">
-      <label class="field">년<input id="y" type="number" inputmode="numeric" min="1908" max="2100" value="1995" required></label>
-      <label class="field">월<input id="m" type="number" inputmode="numeric" min="1" max="12" value="5" required></label>
-      <label class="field">일<input id="d" type="number" inputmode="numeric" min="1" max="31" value="14" required></label>
-    </div>
-
-    <div class="group">
-      <label class="field">태어난 시각
-        <input id="t" type="time" value="09:30">
-      </label>
-      <label class="toggle">
-        <input id="t-unknown" type="checkbox"><span class="switch" aria-hidden="true"></span> 시각을 몰라요
-      </label>
-    </div>
-
-    <div class="field place">
-      <span class="label">태어난 곳</span>
-      <div class="place-bar">
-        <select id="sido" aria-label="시·도">
-          <option value="">시·도</option>
-        </select>
-        <select id="sgg" aria-label="시·군·구" disabled>
-          <option value="">시·군·구</option>
-        </select>
+  <h2 class="group-title">나</h2>
+  <div class="group">
+    <label class="row">
+      <span class="row-label">이름</span>
+      <input id="name" class="row-input" type="text" maxlength="20" autocomplete="off" placeholder="선택">
+    </label>
+    <div class="row">
+      <span class="row-label" id="g-label">성별</span>
+      <div class="seg" role="radiogroup" aria-labelledby="g-label">
+        <label><input type="radio" name="gender" value="M"><span>남</span></label>
+        <label><input type="radio" name="gender" value="F"><span>여</span></label>
       </div>
-      <label class="toggle place-unknown">
-        <input id="p-unknown" type="checkbox"><span class="switch" aria-hidden="true"></span> 태어난 곳을 몰라요
-      </label>
     </div>
+  </div>
 
-    <div class="field ask-block">
-      <span class="label">궁금한 점 <span class="opt">선택</span></span>
-      <div class="chips" id="cats" role="group" aria-label="질문 분야"></div>
-      <div class="chips sub" id="qs" role="group" aria-label="구체적인 질문" hidden></div>
-      <textarea id="question" rows="2" maxlength="300" placeholder="분야를 고르거나 직접 적어 주세요."></textarea>
-      <span class="count" id="q-count">0 / 300</span>
+  <h2 class="group-title">태어난 날</h2>
+  <div class="group">
+    <div class="row">
+      <span class="row-label" id="c-label">달력</span>
+      <div class="seg" role="radiogroup" aria-labelledby="c-label">
+        <label><input type="radio" name="cal" value="solar" checked><span>양력</span></label>
+        <label><input type="radio" name="cal" value="lunar"><span>음력</span></label>
+      </div>
     </div>
+    <div class="row">
+      <span class="row-label">날짜</span>
+      <div class="nums">
+        <input id="y" class="num w4" type="text" inputmode="numeric" autocomplete="off" aria-label="년"><span class="unit">년</span>
+        <input id="m" class="num" type="text" inputmode="numeric" autocomplete="off" aria-label="월"><span class="unit">월</span>
+        <input id="d" class="num" type="text" inputmode="numeric" autocomplete="off" aria-label="일"><span class="unit">일</span>
+      </div>
+    </div>
+    <label class="row" id="leap-wrap" hidden>
+      <span class="row-label">윤달</span>
+      <span class="toggle"><input id="leap" type="checkbox"><span class="switch" aria-hidden="true"></span></span>
+    </label>
+    <div class="row">
+      <span class="row-label">시각</span>
+      <div class="nums">
+        <input id="th" class="num" type="text" inputmode="numeric" autocomplete="off" aria-label="시 (0~23)"><span class="unit">시</span>
+        <input id="tm" class="num" type="text" inputmode="numeric" autocomplete="off" aria-label="분"><span class="unit">분</span>
+      </div>
+    </div>
+    <label class="row">
+      <span class="row-label">시각 모름</span>
+      <span class="toggle"><input id="t-unknown" type="checkbox"><span class="switch" aria-hidden="true"></span></span>
+    </label>
+  </div>
+  <p class="group-foot">시각은 24시간 기준으로 적어 주세요. 오후 3시는 15시입니다.</p>
 
-    <p class="error" id="form-err" role="alert" hidden></p>
-    <button type="submit" class="primary">사주 보기</button>
-  </form>
-</section>
+  <h2 class="group-title">태어난 곳</h2>
+  <div class="group">
+    <label class="row">
+      <span class="row-label">시·도</span>
+      <select id="sido" class="row-select"><option value="">선택</option></select>
+    </label>
+    <label class="row">
+      <span class="row-label">시·군·구</span>
+      <select id="sgg" class="row-select" disabled><option value="">선택</option></select>
+    </label>
+    <label class="row">
+      <span class="row-label">태어난 곳 모름</span>
+      <span class="toggle"><input id="p-unknown" type="checkbox"><span class="switch" aria-hidden="true"></span></span>
+    </label>
+  </div>
 
-<section class="card" id="result" hidden aria-labelledby="res-title">
-  <h2 id="res-title">사주팔자</h2>
-  <p class="hint" id="res-meta"></p>
+  <h2 class="group-title">질문</h2>
+  <div class="group pad">
+    <div class="chips" id="cats" role="group" aria-label="질문 분야"></div>
+    <div class="chips sub" id="qs" role="group" aria-label="구체적인 질문" hidden></div>
+    <textarea id="question" rows="2" maxlength="300" placeholder="무엇이 궁금하세요?" aria-label="질문"></textarea>
+    <span class="count" id="q-count">0 / 300</span>
+  </div>
+
+  <p class="error" id="form-err" role="alert" hidden></p>
+  <button type="submit" class="primary">사주 보기</button>
+</form>
+
+<section class="panel" id="result" hidden aria-labelledby="res-title">
+  <h2 class="panel-title" id="res-title">사주팔자 <span class="hanja">四柱八字</span></h2>
+  <p class="meta" id="res-meta"></p>
   <div class="pillars" id="pillars"></div>
 
   <h3>오행</h3>
@@ -107,23 +115,26 @@
   </div>
 </section>
 
-<section class="card" id="reading-card" hidden aria-labelledby="rd-title">
-  <h2 id="rd-title">풀이</h2>
+<section class="panel" id="reading-card" hidden aria-labelledby="rd-title">
+  <h2 class="panel-title" id="rd-title">풀이</h2>
   <div id="key-wrap" hidden>
-    <label class="field">OpenAI API 키
-      <input id="key" type="password" autocomplete="off" placeholder="sk-...">
-      <span class="hint">키는 이 탭에만 임시 저장되고 OpenAI 외에는 보내지 않습니다.</span>
-    </label>
+    <div class="group">
+      <label class="row">
+        <span class="row-label">OpenAI API 키</span>
+        <input id="key" class="row-input" type="password" autocomplete="off" placeholder="sk-...">
+      </label>
+    </div>
+    <p class="group-foot">키는 이 탭에만 임시 저장되고 OpenAI 외에는 보내지 않습니다.</p>
   </div>
   <button type="button" id="ai-btn" class="primary" hidden>풀이 보기</button>
-  <p class="hint" id="ai-status" aria-live="polite"></p>
+  <p class="status" id="ai-status" aria-live="polite"></p>
   <div id="qa"></div>
   <div id="reading"></div>
   <div id="follow" class="follow" hidden>
     <h3>더 물어보기</h3>
     <div id="f-qa" class="qa-list"></div>
     <div class="chips" id="f-chips" role="group" aria-label="추가 질문 예시"></div>
-    <textarea id="f-question" rows="2" maxlength="300" placeholder="풀이를 보고 더 궁금한 점을 적어 주세요."></textarea>
+    <textarea id="f-question" rows="2" maxlength="300" placeholder="무엇이 더 궁금하세요?" aria-label="추가 질문"></textarea>
     <button type="button" id="ask-btn" class="primary">질문하기</button>
   </div>
 </section>

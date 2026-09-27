@@ -7,7 +7,7 @@
   var LOCAL = /^(127\.0\.0\.1|localhost)$/.test(global.location.hostname);
   var CONFIG = {
     // 로컬(server.py)에서는 서버가 키를 붙여 전달한다. 공개 배포 시 Worker 주소를 넣는다.
-    WORKER_URL: LOCAL ? "/api/responses" : "",  // 예: "https://saju-proxy.<계정>.workers.dev"
+    WORKER_URL: LOCAL ? "/api/responses" : "https://saju-proxy.ahnhyuk0514.workers.dev",
     MODEL: "gpt-5-mini",
     REASONING_EFFORT: "medium"
   };

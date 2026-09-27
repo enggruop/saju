@@ -1,0 +1,5 @@
+# 로컬 전용 (키 파일 경로, 빌드 도구)
+server.py
+tools/
+NOTES_local.md
+__pycache__/

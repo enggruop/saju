@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사주</title>
+<meta name="description" content="생년월일시와 태어난 곳으로 사주팔자를 풀어 드립니다.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="wrap">
+
+<header class="hero">
+  <h1>사주</h1>
+</header>
+
+<section class="card" aria-labelledby="in-title">
+  <h2 id="in-title">출생 정보</h2>
+  <form id="form" novalidate>
+
+    <div class="group">
+      <label class="field">이름 <span class="opt">선택</span>
+        <input id="name" type="text" maxlength="20" autocomplete="off" placeholder="홍길동">
+      </label>
+      <fieldset class="field">
+        <legend>성별</legend>
+        <div class="seg" role="radiogroup">
+          <label><input type="radio" name="gender" value="M" checked><span>남</span></label>
+          <label><input type="radio" name="gender" value="F"><span>여</span></label>
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="group">
+      <fieldset class="field">
+        <legend>생년월일</legend>
+        <div class="seg" role="radiogroup">
+          <label><input type="radio" name="cal" value="solar" checked><span>양력</span></label>
+          <label><input type="radio" name="cal" value="lunar"><span>음력</span></label>
+        </div>
+      </fieldset>
+      <label class="toggle" id="leap-wrap" hidden>
+        <input id="leap" type="checkbox"><span class="switch" aria-hidden="true"></span> 윤달
+      </label>
+    </div>
+
+    <div class="ymd">
+      <label class="field">년<input id="y" type="number" inputmode="numeric" min="1908" max="2100" value="1995" required></label>
+      <label class="field">월<input id="m" type="number" inputmode="numeric" min="1" max="12" value="5" required></label>
+      <label class="field">일<input id="d" type="number" inputmode="numeric" min="1" max="31" value="14" required></label>
+    </div>
+
+    <div class="group">
+      <label class="field">태어난 시각
+        <input id="t" type="time" value="09:30">
+      </label>
+      <label class="toggle">
+        <input id="t-unknown" type="checkbox"><span class="switch" aria-hidden="true"></span> 시각을 몰라요
+      </label>
+    </div>
+
+    <div class="field place">
+      <span class="label">태어난 곳</span>
+      <div class="place-bar">
+        <select id="sido" aria-label="시·도">
+          <option value="">시·도</option>
+        </select>
+        <select id="sgg" aria-label="시·군·구" disabled>
+          <option value="">시·군·구</option>
+        </select>
+      </div>
+      <label class="toggle place-unknown">
+        <input id="p-unknown" type="checkbox"><span class="switch" aria-hidden="true"></span> 태어난 곳을 몰라요
+      </label>
+    </div>
+
+    <div class="field ask-block">
+      <span class="label">궁금한 점 <span class="opt">선택</span></span>
+      <div class="chips" id="cats" role="group" aria-label="질문 분야"></div>
+      <div class="chips sub" id="qs" role="group" aria-label="구체적인 질문" hidden></div>
+      <textarea id="question" rows="2" maxlength="300" placeholder="분야를 고르거나 직접 적어 주세요."></textarea>
+      <span class="count" id="q-count">0 / 300</span>
+    </div>
+
+    <p class="error" id="form-err" role="alert" hidden></p>
+    <button type="submit" class="primary">사주 보기</button>
+  </form>
+</section>
+
+<section class="card" id="result" hidden aria-labelledby="res-title">
+  <h2 id="res-title">사주팔자</h2>
+  <p class="hint" id="res-meta"></p>
+  <div class="pillars" id="pillars"></div>
+
+  <h3>오행</h3>
+  <p class="hint">여덟 글자에 나무·불·흙·쇠·물의 기운이 각각 몇 개씩 있는지 보여줍니다.</p>
+  <div class="elements" id="elements"></div>
+
+  <div id="dw-wrap">
+    <h3>대운</h3>
+    <p class="hint">10년마다 바뀌는 인생의 큰 흐름입니다. 지금 지나고 있는 시기를 표시했습니다.</p>
+    <div class="daewoon" id="daewoon"></div>
+  </div>
+</section>
+
+<section class="card" id="reading-card" hidden aria-labelledby="rd-title">
+  <h2 id="rd-title">풀이</h2>
+  <div id="key-wrap" hidden>
+    <label class="field">OpenAI API 키
+      <input id="key" type="password" autocomplete="off" placeholder="sk-...">
+      <span class="hint">키는 이 탭에만 임시 저장되고 OpenAI 외에는 보내지 않습니다.</span>
+    </label>
+  </div>
+  <button type="button" id="ai-btn" class="primary" hidden>풀이 보기</button>
+  <p class="hint" id="ai-status" aria-live="polite"></p>
+  <div id="qa"></div>
+  <div id="reading"></div>
+  <div id="follow" class="follow" hidden>
+    <h3>더 물어보기</h3>
+    <div id="f-qa" class="qa-list"></div>
+    <div class="chips" id="f-chips" role="group" aria-label="추가 질문 예시"></div>
+    <textarea id="f-question" rows="2" maxlength="300" placeholder="풀이를 보고 더 궁금한 점을 적어 주세요."></textarea>
+    <button type="button" id="ask-btn" class="primary">질문하기</button>
+  </div>
+</section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.7.7/lunar.js"></script>
+<script src="places.js"></script>
+<script src="saju.js"></script>
+<script src="llm.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
